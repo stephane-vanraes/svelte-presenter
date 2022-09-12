@@ -1,0 +1,9 @@
+<script>
+    import PresenterNotes from '$lib/PresenterNotes.svelte';
+</script>
+
+Intro
+
+<PresenterNotes>
+    These are some notes
+</PresenterNotes>
