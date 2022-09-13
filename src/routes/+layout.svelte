@@ -31,7 +31,7 @@
 </script>
 
 {#if !isPresentation}
-	<a href="{$page.params.url}?presentation" target="_blank">Open presentation</a>
+	<a href="{$page.url.pathname}?presentation" target="_blank">Open presentation</a>
 {/if}
 
 <slot />
