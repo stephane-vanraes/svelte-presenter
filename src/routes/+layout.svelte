@@ -1,43 +1,68 @@
-<script>
+<script lang="ts">
 	import { goto } from '$app/navigation';
-	import { onMount } from 'svelte';
-	import { page } from '$app/stores';
-	import current from '$lib/store';
+	import { page } from '$app/state';
+	import favicon from '#lib/assets/favicon.svg';
+	import presentation, { initializePresentation } from '#lib/stores/presentation.svelte.ts';
+	import '#lib/styles/index.css';
+	import Icons from '#lib/components/Icons.svelte';
+	import Icon from '#lib/components/Icon.svelte';
 
-	/** @type {import('./$types').LayoutData} */
-	export let data;
+	initializePresentation();
 
-	// Array with the order of the slides
-	const slides = ['welcome', 'intro'];
+	let { data, children } = $props();
 
-	let start = slides.indexOf(data.path);
-
-	const isPresentation = $page.url.searchParams.has('presentation');
-
-	onMount(() => {
-		$current = start > 0 ? start : 0;
-		const unsubscribe = current.subscribe((c) => {
-			if (isPresentation) {
-				goto(`/${slides[c]}?presentation`);
-			} else {
-				goto(`/${slides[c]}`);
-			}
-		});
-
-		document.addEventListener('keydown', (ev) => {
-			if (ev.key == 'ArrowRight' && $current < slides.length - 1) {
-				$current++;
-			}
-			if (ev.key == 'ArrowLeft' && $current != 0) {
-				$current--;
-			}
-		});
-		return unsubscribe;
+	$effect(() => {
+		const slug = presentation.value.current_page.toString().padStart(2, '0');
+		if (slug != page.url.pathname.substring(1)) {
+			goto(`/${slug}${page.url.search}`);
+		}
 	});
+
+	const handleKeyUp = (ev: KeyboardEvent) => {
+		switch (ev.key) {
+			case 'ArrowRight': {
+				if (presentation.value.current_page < data.page_count) {
+					presentation.value.current_page += 1;
+				}
+				break;
+			}
+			case 'ArrowLeft': {
+				if (presentation.value.current_page > 0) {
+					presentation.value.current_page -= 1;
+				}
+			}
+		}
+	};
 </script>
 
-{#if !isPresentation}
-	<a href="{$page.url.pathname}?presentation" target="_blank">Open presentation</a>
-{/if}
+<svelte:window on:keyup={handleKeyUp} />
 
-<slot />
+<svelte:head>
+	<link rel="icon" href={favicon} />
+</svelte:head>
+
+<main>
+	{@render children()}
+
+	{#if page.url.search != '?viewer'}
+		<a href="?viewer" target="_blank">
+			<Icon icon="presentation" />
+		</a>
+	{/if}
+</main>
+
+<Icons />
+
+<style>
+	a {
+		aspect-ratio: 1;
+		background-color: var(--control-bg);
+		border-radius: 50%;
+		color: var(--control-text);
+		display: grid;
+		inline-size: 1.5lh;
+		place-items: center;
+		position: fixed;
+		inset: 5px 5px auto auto;
+	}
+</style>

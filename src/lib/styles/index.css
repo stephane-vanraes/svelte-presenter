@@ -1,0 +1,89 @@
+:root {
+	--background: ;
+	--surface: ;
+	--accent: ;
+	--text-color: ;
+	--main-font: ;
+	--header-font: ;
+
+	/* Colour Scheme for control elements visible by the presenter only */
+	--control-bg: black;
+	--control-text: white;
+	--notes-bg: grey;
+	--notes-text: black;
+}
+
+::view-transition-group(root) {
+	animation: none;
+}
+
+::view-transition-group(*) {
+	animation-duration: 250ms;
+	z-index: 1000;
+}
+
+@media (prefers-reduced-motion) {
+	::view-transition-group(*),
+	::view-transition-old(*),
+	::view-transition-new(*) {
+		animation: none !important;
+	}
+}
+
+*,
+*:after,
+*:before {
+	box-sizing: border-box;
+	color: inherit;
+	font: inherit;
+	line-height: inherit;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
+}
+
+*:is(:active, :focus, :hover) {
+	outline: none;
+}
+
+html {
+	font-size: clamp(1rem, 1.5dvw, 10rem);
+}
+
+body {
+	background: var(--background);
+	color: var(--text);
+	font-family: var(--main-font), sans-serif;
+	overflow: hidden;
+}
+
+main {
+	align-content: start;
+	block-size: 100dvh;
+	inline-size: 100dvw;
+	display: grid;
+	gap: 1rem;
+	padding: 1rem;
+	position: relative;
+}
+
+h1,
+h2,
+h3 {
+	font-family: var(--header-font);
+}
+
+h1 {
+	font-size: 2rem;
+	font-weight: 600;
+	grid-column: 1 / -1;
+}
+
+h2 {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
+h3 {
+	font-weight: 600;
+}
