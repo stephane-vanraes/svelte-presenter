@@ -21,6 +21,7 @@ type PresentationState = {
  */
 const presentation = $state<{ value: PresentationState }>({
 	value: {
+		code: false,
 		current_page: 0
 	}
 });
