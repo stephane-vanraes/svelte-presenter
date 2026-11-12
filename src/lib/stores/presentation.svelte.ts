@@ -5,6 +5,7 @@
  * BroadcastChannel and compared with JSON.stringify.
  */
 type PresentationState = {
+	code: boolean;
 	current_page: number;
 };
 
